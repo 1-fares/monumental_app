@@ -2,11 +2,22 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Monumentales DM{% endblock %}</title>
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/fontawesome/css/all.css">
+	<link rel="stylesheet" href="/css/styles.css">
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+	{{ include('inc/navbar.html.twig') }}
+	{% block body_nocontainer %}
+	<div class="container">
         {% block body %}{% endblock %}
+	</div>
+	{% endblock %}
+	<script src="/js/jquery-3.3.1.slim.min.js"></script>
+	<script src="/js/popper.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
         {% block javascripts %}{% endblock %}
     </body>
 </html>
