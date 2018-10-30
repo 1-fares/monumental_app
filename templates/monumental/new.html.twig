@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Monument{% endblock %}
+{% block body %}
+	<h2>New Monument:</h2>
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	<a href="/" class="btn btn-sm btn-secondary mt-1">Cancel</a>
+	{{ form_end(form) }}
+{% endblock %}

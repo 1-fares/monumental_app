@@ -3,6 +3,38 @@
 {% block title %}Hello {{ controller_name }}!{% endblock %}
 
 {% block body %}
+    <main role="main">
+      <div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">Monumental!</h1>
+          <p>Some random monuments have been stored in elasticsearch, and here you can see them, add more, delete them. Go crazy!</p>
+        </div>
+      </div>
+
+      <div class="container">
+        <!-- Example row of columns -->
+        <div class="row">
+          <div class="col-md-4">
+            <h2>Search for Monuments</h2>
+            <p>Here you can search for monuments stored in this instance of elasticsearch.</p>
+            <p><a class="btn btn-secondary" href="#" role="button">Search &raquo;</a></p>
+          </div>
+          <div class="col-md-4">
+            <h2>Add Monuments</h2>
+            <p>Here you can add a new monument to elasticsearch. Make sure you have an image ready.</p>
+            <p><a class="btn btn-secondary" href="add_monument" role="button">Add Monument &raquo;</a></p>
+          </div>
+          <div class="col-md-4">
+            <h2>Ass Monuments</h2>
+            <p>Here you can see a list of all monuments stored in this instance of elasticsearch.</p>
+            <p><a class="btn btn-secondary" href="#" role="button">See All &raquo;</a></p>
+          </div>
+        </div>
+    </main>
+
+        <hr>
+
+      </div> <!-- /container -->
 <div>
 	<p>Message:</p>
 	<p><pre> {{ message }} </pre></p>

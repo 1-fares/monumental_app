@@ -4,6 +4,11 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+use App\Entity\Monument;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7;
@@ -43,5 +48,30 @@ class MonumentalController extends AbstractController {
 			'controller_name' => 'MonumentalController',
 			'message' => $message,
 			]);
+	}
+
+	/**
+	* @Route("/add_monument", name="add_monument")
+	*/
+	public function add_monument(Request $request) {
+		$monument = new Monument();
+
+		$formbuilder = $this->createFormBuilder($monument);
+		$formbuilder->add('name', TextType::class, array('attr' => array('class' => 'form-control')));
+		$formbuilder->add('save', SubmitType::class, array('label' => 'Create', 'attr' => array('class' => 'btn btn-primary mt-3')));
+		$form = $formbuilder->getForm();
+
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$monument = $form->getData();
+			//TODO: save in elasticsearch
+
+			return $this->redirectToRoute("index");
+		}
+
+		return $this->render("monumental/new.html.twig", [
+			'form' => $form->createView(),
+		]);
 	}
 }
