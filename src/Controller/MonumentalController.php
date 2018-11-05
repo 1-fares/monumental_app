@@ -17,7 +17,7 @@ use GuzzleHttp\Exception\RequestException;
 
 class MonumentalController extends AbstractController {
 
-	private function elasticRequest($method, $queryURL, $json=null) {
+	private function elasticRequest($method, $queryURL="", $json=null) {
 		$json_string = $json ? json_encode($json) : "";
 		$message = "\nelasticsearch \"$method\" request: $queryURL\n body: $json_string";
 		$client = new GuzzleClient();
@@ -39,6 +39,12 @@ class MonumentalController extends AbstractController {
 		return $message;
 	}
 
+	private function elasticMonumentalRequest($method, $queryURL="", $json=null) {
+		if (strlen($queryURL) > 0 && substr($queryURL, 0, 1) === "/") $queryURL .= "/";
+
+		return $this->elasticRequest($method, '/monumental/building' . $queryURL, %json);
+	}
+
 	/**
 	* @Route("/", name="index")
 	*/
@@ -52,6 +58,13 @@ class MonumentalController extends AbstractController {
 			'controller_name' => 'MonumentalController',
 			'message' => $message,
 			]);
+	}
+
+	/**
+	* @Route("/all_monuments", name="all_monuments")
+	*/
+	public function all_monuments() {
+		$message = $this->elasticRequest('GET', '/monumental/building'
 	}
 
 	/**
@@ -81,13 +94,17 @@ class MonumentalController extends AbstractController {
 		if ($form->isSubmitted() && $form->isValid()) {
 			$monument = $form->getData();
 
-			$file = $form['images']->getData();
+			$b64_images = "";
+			$filename = $form['images']->getData();
 //			$message = "file is $file\n";
-			$b64_images = $file ? base64_encode(file_get_contents($file)) : null;
-			$message = "b64file is $b64_images\n";
+			if ($filename) {
+				$file_contents = file_get_contents($filename);
+				$b64_images = $file_contents === false ? "" : base64_encode($file_contents);
+			}
+			$message = "b64file is \"$b64_images\"\n";
 
 //			echo "<img src=\"data:image/png;base64,$b64_images\">";
-/*
+
 			$message = $this->elasticRequest('POST', '/monumental/building/2', [
 				'name' => $monument->getName(),
 				'images' => $b64_images,
@@ -95,9 +112,9 @@ class MonumentalController extends AbstractController {
 //			$message .= $this->elasticRequest('GET', '/monumental/_search?pretty=true&stored_fields=');
 //			$message .= "\n<br>KHARA";
 			//TODO: save in elasticsearch
-			$message .= $this->elasticRequest('GET', '/monumental/building/2');
-			$message .= "\n<br>ZIFT";
- */
+//			$message .= $this->elasticRequest('GET', '/monumental/building/2');
+//			$message .= "\n<br>ZIFT";
+
 		//	return $this->redirectToRoute("index");
 			return $this->render('monumental/index.html.twig', [
 				'controller_name' => 'MonumentalController',
