@@ -40,9 +40,21 @@ class MonumentalController extends AbstractController {
 	}
 
 	private function elasticMonumentalRequest($method, $queryURL="", $json=null) {
-		if (strlen($queryURL) > 0 && substr($queryURL, 0, 1) === "/") $queryURL .= "/";
+		if (strlen($queryURL) > 0 && substr($queryURL, 0, 1) !== "/") $queryURL = "/$queryURL";
 
 		return $this->elasticRequest($method, '/monumental/building' . $queryURL, $json);
+	}
+
+	private function elasticPost($queryURL="", $json=null) {
+		return $this->elasticMonumentalRequest('POST', $queryURL, $json);
+	}
+
+	private function elasticGet($queryURL="", $json=null) {
+		return $this->elasticMonumentalRequest('GET', $queryURL, $json);
+	}
+
+	private function elasticDelete($queryURL="", $json=null) {
+		return $this->elasticMonumentalRequest('DELETE', $queryURL, $json);
 	}
 
 	/**
@@ -50,7 +62,7 @@ class MonumentalController extends AbstractController {
 	*/
 	public function index() {
 		$message = "";
-		$message .= $this->elasticRequest('POST', '/monumental/building/1', ["title" => "first title"]);
+		$message .= $this->elasticPost('1', ["title" => "first title"]);
 		$message .= $this->elasticRequest('GET', '/monumental/building/1');
 		$message .= $this->elasticRequest('DELETE', '/monumental/building/1');
 
