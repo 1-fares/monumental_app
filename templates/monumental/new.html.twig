@@ -4,7 +4,88 @@
 {% block body %}
 	<h2>New Monument:</h2>
 	{{ form_start(form) }}
-	{{ form_widget(form) }}
-	<a href="/" class="btn btn-sm btn-secondary mt-1">Cancel</a>
+		{{ form_errors(form) }}
+
+		<div class="form-group row">
+			<label for="form_name" class="col-sm-2 col-form-label">Monument Name</label>
+			{{ form_errors(form.name) }}
+			<div class="col-sm-10">
+				{{ form_widget(form.name) }}
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label for="form_location" class="col-sm-2 col-form-label">Location</label>
+			<div class="col-sm-10">
+				{{ form_widget(form.location) }}
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label for="form_date" class="col-sm-2 col-form-label">Date (year or era)</label>
+			<div class="col-sm-5">
+				{{ form_widget(form.date) }}
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label for="form_height" class="col-sm-2 col-form-label">Height (m)</label>
+			<div class="col-sm-5">
+				{{ form_widget(form.height) }}
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label for="form_unesco_status" class="col-sm-2 col-form-label">UNESCO Status</label>
+			<div class="col-sm-5">
+				{{ form_widget(form.unesco_status) }}
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label for="form_builder" class="col-sm-2 col-form-label">Architect/Builder</label>
+			<div class="col-sm-5">
+				{{ form_widget(form.builder) }}
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label for="form_purpose" class="col-sm-2 col-form-label">Original Purpose</label>
+			<div class="col-sm-10">
+				{{ form_widget(form.purpose) }}
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label for="form_condition" class="col-sm-2 col-form-label">Current Condition</label>
+			<div class="col-sm-10">
+				{{ form_widget(form.condition) }}
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label for="form_major_event" class="col-sm-2 col-form-label">Major Historical Event</label>
+			<div class="col-sm-10">
+				{{ form_widget(form.major_event) }}
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label for="form_tags" class="col-sm-2 col-form-label">Tags (comma-separated)</label>
+			<div class="col-sm-10">
+				{{ form_widget(form.tags) }}
+			</div>
+		</div>
+
+		<div class="form-group row">
+			<label for="form_images" class="col-sm-2 col-form-label">Image</label>
+			<div class="col-sm-10">
+				{{ form_widget(form.images) }}
+			</div>
+		</div>
+
+	{#{ form_widget(form) }#}
+
 	{{ form_end(form) }}
+	<a href="/" class="btn btn-secondary mt-1">Cancel</a>
 {% endblock %}

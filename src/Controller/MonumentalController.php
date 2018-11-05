@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 use App\Entity\Monument;
@@ -17,8 +18,8 @@ use GuzzleHttp\Exception\RequestException;
 class MonumentalController extends AbstractController {
 
 	private function elasticRequest($method, $queryURL, $json=null) {
-		$message = "";
-		$message .= "elasticsearch\n";
+		$json_string = $json ? json_encode($json) : "";
+		$message = "\nelasticsearch \"$method\" request: $queryURL\n body: $json_string";
 		$client = new GuzzleClient();
 		$result = null;
 
@@ -26,6 +27,7 @@ class MonumentalController extends AbstractController {
 			$result = $client->request($method, "http://elasticsearch:9200$queryURL", $json ? [ 'json' => $json ] : []);
 			$statusCode = $result->getStatusCode();
 			$message .= "$statusCode\n";
+			$message .= $result->getBody();
 		} catch (RequestException $e) {
 			$message .= Psr7\str($e->getRequest());
 			$message .= "\n";
@@ -41,9 +43,11 @@ class MonumentalController extends AbstractController {
 	* @Route("/", name="index")
 	*/
 	public function index() {
-		$message = $this->elasticRequest('POST', '/monumental/building/1', ["title" => "first title"]);
+		$message = "";
+		$message .= $this->elasticRequest('POST', '/monumental/building/1', ["title" => "first title"]);
 		$message .= $this->elasticRequest('GET', '/monumental/building/1');
 		$message .= $this->elasticRequest('DELETE', '/monumental/building/1');
+
 		return $this->render('monumental/index.html.twig', [
 			'controller_name' => 'MonumentalController',
 			'message' => $message,
@@ -56,18 +60,49 @@ class MonumentalController extends AbstractController {
 	public function add_monument(Request $request) {
 		$monument = new Monument();
 
-		$formbuilder = $this->createFormBuilder($monument);
-		$formbuilder->add('name', TextType::class, array('attr' => array('class' => 'form-control')));
-		$formbuilder->add('save', SubmitType::class, array('label' => 'Create', 'attr' => array('class' => 'btn btn-primary mt-3')));
-		$form = $formbuilder->getForm();
+		$form = $this->createFormBuilder($monument)
+			->add('name', TextType::class, array('attr' => array('class' => 'form-control'), 'label' => "Monument Name"))
+			->add('location', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+			->add('date', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+			->add('height', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+			->add('unesco_status', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+			->add('builder', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+			->add('purpose', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+			->add('condition', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+			->add('major_event', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+			->add('tags', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
+			->add('images', FileType::class, array('required' => false, 'label' => "Image"))
+
+			->add('save', SubmitType::class, array('label' => 'Create', 'attr' => array('class' => 'btn btn-primary mt-3 btn-block')))
+			->getForm();
 
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			$monument = $form->getData();
-			//TODO: save in elasticsearch
 
-			return $this->redirectToRoute("index");
+			$file = $form['images']->getData();
+//			$message = "file is $file\n";
+			$b64_images = $file ? base64_encode(file_get_contents($file)) : null;
+			$message = "b64file is $b64_images\n";
+
+//			echo "<img src=\"data:image/png;base64,$b64_images\">";
+/*
+			$message = $this->elasticRequest('POST', '/monumental/building/2', [
+				'name' => $monument->getName(),
+				'images' => $b64_images,
+			]);
+//			$message .= $this->elasticRequest('GET', '/monumental/_search?pretty=true&stored_fields=');
+//			$message .= "\n<br>KHARA";
+			//TODO: save in elasticsearch
+			$message .= $this->elasticRequest('GET', '/monumental/building/2');
+			$message .= "\n<br>ZIFT";
+ */
+		//	return $this->redirectToRoute("index");
+			return $this->render('monumental/index.html.twig', [
+				'controller_name' => 'MonumentalController',
+				'message' => $message,
+				]);
 		}
 
 		return $this->render("monumental/new.html.twig", [

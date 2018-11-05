@@ -67,7 +67,7 @@ class Monument
     private $tags;
 
     /**
-     * @ORM\Column(type="string", length=1048576, nullable=true)
+     * @ORM\Column(type="blob", nullable=true)
      */
     private $images;
 
@@ -201,7 +201,7 @@ class Monument
         return $this->images;
     }
 
-    public function setImages(?string $images): self
+    public function setImages($images): self
     {
         $this->images = $images;
 
