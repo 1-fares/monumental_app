@@ -42,7 +42,7 @@ class MonumentalController extends AbstractController {
 	private function elasticMonumentalRequest($method, $queryURL="", $json=null) {
 		if (strlen($queryURL) > 0 && substr($queryURL, 0, 1) === "/") $queryURL .= "/";
 
-		return $this->elasticRequest($method, '/monumental/building' . $queryURL, %json);
+		return $this->elasticRequest($method, '/monumental/building' . $queryURL, $json);
 	}
 
 	/**
@@ -64,7 +64,7 @@ class MonumentalController extends AbstractController {
 	* @Route("/all_monuments", name="all_monuments")
 	*/
 	public function all_monuments() {
-		$message = $this->elasticRequest('GET', '/monumental/building'
+//		$message = $this->elasticRequest('GET', '/monumental/building'
 	}
 
 	/**
