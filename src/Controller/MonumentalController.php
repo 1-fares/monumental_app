@@ -117,7 +117,7 @@ class MonumentalController extends AbstractController {
 
 //			echo "<img src=\"data:image/png;base64,$b64_images\">";
 
-			$message = $this->elasticRequest('POST', '/monumental/building/2', [
+			$message = $this->elasticPost('2', [
 				'name' => $monument->getName(),
 				'images' => $b64_images,
 			]);
