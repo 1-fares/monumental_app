@@ -10,6 +10,7 @@ class ElasticClient {
 
 	public static function elasticRequest($method, $queryURL="", $body_array=null) {
 		$message = "\nelasticsearch \"$method\" request: $queryURL\n body: " . ($body_array ? json_encode($body_array) : ""); // TODO: delete
+//		echo $message; exit(1);
 		$client = new GuzzleClient();
 		$status_code = "";
 		$body = "";
@@ -29,7 +30,7 @@ class ElasticClient {
 			echo $message;
 			exit(1);
 		}
-		return array('status' => $status_code, 'body', json_decode($body));
+		return array('status' => $status_code, 'body' => json_decode($body, true));
 	}
 
 	public static function elasticMonumentalRequest($method, $queryURL="", $body_array=null) {

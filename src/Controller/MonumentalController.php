@@ -24,11 +24,10 @@ class MonumentalController extends AbstractController {
 	public function index() {
 		$message = "";
 		$message .= ES::elasticPost('1', ["title" => "first title"])['status'];
-		$message .= ES::elasticRequest('GET', '/monumental/building/1')['status'];
-		$message .= ES::elasticRequest('DELETE', '/monumental/building/1')['status'];
+		$message .= ES::elasticGet('1')['status'];
+		$message .= ES::elasticDelete('1')['status'];
 
 		return $this->render('monumental/index.html.twig', [
-			'controller_name' => 'MonumentalController',
 			'message' => $message,
 			]);
 	}
@@ -37,7 +36,36 @@ class MonumentalController extends AbstractController {
 	* @Route("/all_monuments", name="all_monuments")
 	*/
 	public function all_monuments() {
-//		$message = $this->elasticRequest('GET', '/monumental/building'
+		$message = "";
+		$result = ES::elasticGet('_search?pretty=true',
+		       	true ? null :(
+				['query' => ['match_all' => [''=>'']],
+				'stored_fields' => []])
+			);
+//		$message .= $result['status'];
+//		$message .= "\n";
+//		$message .= json_encode($result['body']);
+		$body = $result['body'];
+//		$message .= "\nTotal hits: ";
+		$hits = $body['hits']['total'];
+//		$message .= $hits;
+//		$message .= "\nIndices: ";
+		$hits = $body['hits']['hits'];
+		foreach ($hits as $hits_key => $hit) {
+//			$message .= "\n\tid: " . $hit['_id'];
+//			$message .= "\n\tname:" . $hit['_source']['name'];
+			if (!isset($hit['_source']['images'])) {
+				$hit['_source']['images'] = "";
+				$hits[$hits_key] = $hit;
+//			} else {
+//				$message .= "\n\timages:" . $hit['_source']['images'];
+			}
+		}
+
+		return $this->render('monumental/all.html.twig', [
+			'message' => $message,
+			'hits' => $hits,
+			]);
 	}
 
 	/**
