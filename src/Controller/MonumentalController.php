@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 use App\Entity\Monument;
+use App\Elastic\ElasticClient as ES;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7;
@@ -17,54 +18,14 @@ use GuzzleHttp\Exception\RequestException;
 
 class MonumentalController extends AbstractController {
 
-	private function elasticRequest($method, $queryURL="", $json=null) {
-		$json_string = $json ? json_encode($json) : "";
-		$message = "\nelasticsearch \"$method\" request: $queryURL\n body: $json_string";
-		$client = new GuzzleClient();
-		$result = null;
-
-		try {
-			$result = $client->request($method, "http://elasticsearch:9200$queryURL", $json ? [ 'json' => $json ] : []);
-			$statusCode = $result->getStatusCode();
-			$message .= "$statusCode\n";
-			$message .= $result->getBody();
-		} catch (RequestException $e) {
-			$message .= Psr7\str($e->getRequest());
-			$message .= "\n";
-			if ($e->hasResponse()) {
-				$message .= Psr7\str($e->getResponse());
-				$message .= "\n";
-			}
-		}
-		return $message;
-	}
-
-	private function elasticMonumentalRequest($method, $queryURL="", $json=null) {
-		if (strlen($queryURL) > 0 && substr($queryURL, 0, 1) !== "/") $queryURL = "/$queryURL";
-
-		return $this->elasticRequest($method, '/monumental/building' . $queryURL, $json);
-	}
-
-	private function elasticPost($queryURL="", $json=null) {
-		return $this->elasticMonumentalRequest('POST', $queryURL, $json);
-	}
-
-	private function elasticGet($queryURL="", $json=null) {
-		return $this->elasticMonumentalRequest('GET', $queryURL, $json);
-	}
-
-	private function elasticDelete($queryURL="", $json=null) {
-		return $this->elasticMonumentalRequest('DELETE', $queryURL, $json);
-	}
-
 	/**
 	* @Route("/", name="index")
 	*/
 	public function index() {
 		$message = "";
-		$message .= $this->elasticPost('1', ["title" => "first title"]);
-		$message .= $this->elasticRequest('GET', '/monumental/building/1');
-		$message .= $this->elasticRequest('DELETE', '/monumental/building/1');
+		$message .= ES::elasticPost('1', ["title" => "first title"])['status'];
+		$message .= ES::elasticRequest('GET', '/monumental/building/1')['status'];
+		$message .= ES::elasticRequest('DELETE', '/monumental/building/1')['status'];
 
 		return $this->render('monumental/index.html.twig', [
 			'controller_name' => 'MonumentalController',
@@ -108,7 +69,7 @@ class MonumentalController extends AbstractController {
 
 			$b64_images = "";
 			$filename = $form['images']->getData();
-//			$message = "file is $file\n";
+
 			if ($filename) {
 				$file_contents = file_get_contents($filename);
 				$b64_images = $file_contents === false ? "" : base64_encode($file_contents);
@@ -117,10 +78,10 @@ class MonumentalController extends AbstractController {
 
 //			echo "<img src=\"data:image/png;base64,$b64_images\">";
 
-			$message = $this->elasticPost('2', [
+			$message = ES::elasticPost('2', [
 				'name' => $monument->getName(),
 				'images' => $b64_images,
-			]);
+			])['status'];
 //			$message .= $this->elasticRequest('GET', '/monumental/_search?pretty=true&stored_fields=');
 //			$message .= "\n<br>KHARA";
 			//TODO: save in elasticsearch
