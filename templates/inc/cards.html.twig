@@ -1,7 +1,7 @@
 <div class="container">
 <div class="row">
     {% for hit in hits %}
-<div class="col-3 card mt-3 mr-3" style="width: 18rem;">
+<div class="col-3 card m-3" style="width: 18rem;">
   <img class="card-img-top" src="data:image/png;base64,{{ hit._source.images }}" alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">{{ hit._source.name }}</h5>

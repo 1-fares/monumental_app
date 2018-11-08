@@ -46,19 +46,12 @@ class MonumentalController extends AbstractController {
 //		$message .= "\n";
 //		$message .= json_encode($result['body']);
 		$body = $result['body'];
-//		$message .= "\nTotal hits: ";
 		$hits = $body['hits']['total'];
-//		$message .= $hits;
-//		$message .= "\nIndices: ";
 		$hits = $body['hits']['hits'];
 		foreach ($hits as $hits_key => $hit) {
-//			$message .= "\n\tid: " . $hit['_id'];
-//			$message .= "\n\tname:" . $hit['_source']['name'];
 			if (!isset($hit['_source']['images'])) {
-				$hit['_source']['images'] = "";
-				$hits[$hits_key] = $hit;
-//			} else {
-//				$message .= "\n\timages:" . $hit['_source']['images'];
+				$hit['_source']['images'] = ""; // empty image
+				$hits[$hits_key] = $hit; // push back into array that's used later by twig
 			}
 		}
 
@@ -104,19 +97,11 @@ class MonumentalController extends AbstractController {
 			}
 			$message = "b64file is \"$b64_images\"\n";
 
-//			echo "<img src=\"data:image/png;base64,$b64_images\">";
-
 			$message = ES::elasticPost('2', [
 				'name' => $monument->getName(),
 				'images' => $b64_images,
 			])['status'];
-//			$message .= $this->elasticRequest('GET', '/monumental/_search?pretty=true&stored_fields=');
-//			$message .= "\n<br>KHARA";
-			//TODO: save in elasticsearch
-//			$message .= $this->elasticRequest('GET', '/monumental/building/2');
-//			$message .= "\n<br>ZIFT";
 
-		//	return $this->redirectToRoute("index");
 			return $this->render('monumental/index.html.twig', [
 				'controller_name' => 'MonumentalController',
 				'message' => $message,
