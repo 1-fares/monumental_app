@@ -33,9 +33,9 @@ class MonumentalController extends AbstractController {
 	}
 
 	/**
-	* @Route("/all_monuments", name="all_monuments")
+	* @Route("/all", name="all")
 	*/
-	public function all_monuments() {
+	public function all() {
 		$message = "";
 		$result = ES::get('_search?pretty=true',
 		       	true ? null :(
@@ -54,9 +54,9 @@ $message .= json_encode($result['body']);
 	}
 
 	/**
-	* @Route("/add_monument", name="add_monument")
+	* @Route("/add", name="add")
 	*/
-	public function add_monument(Request $request) {
+	public function add(Request $request) {
 		$monument = new Monument();
 
 		$form = $this->createFormBuilder($monument)
@@ -117,9 +117,9 @@ $message .= json_encode($result['body']);
 	}
 
 	/**
-	* @Route("/delete_monument/{id}", name="delete_monument")
+	* @Route("/delete/{id}", name="delete")
 	*/
-	public function delete_monument(Request $request, $id) {
+	public function delete(Request $request, $id) {
 		ES::delete($id);
 
 		return $this->redirect($request->headers->get('referer'));
