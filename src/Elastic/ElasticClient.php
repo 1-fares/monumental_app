@@ -8,7 +8,7 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class ElasticClient {
 
-	public static function elasticRequest($method, $queryURL="", $body_array=null) {
+	public static function request($method, $queryURL="", $body_array=null) {
 		$message = "\nelasticsearch \"$method\" request: $queryURL\n body: " . ($body_array ? json_encode($body_array) : ""); // TODO: delete
 //		echo $message; exit(1);
 		$client = new GuzzleClient();
@@ -33,21 +33,21 @@ class ElasticClient {
 		return array('status' => $status_code, 'body' => json_decode($body, true));
 	}
 
-	public static function elasticMonumentalRequest($method, $queryURL="", $body_array=null) {
+	public static function monumentalRequest($method, $queryURL="", $body_array=null) {
 		if (strlen($queryURL) > 0 && substr($queryURL, 0, 1) !== "/") $queryURL = "/$queryURL";
 
-		return ElasticClient::elasticRequest($method, '/monumental/building' . $queryURL, $body_array);
+		return ElasticClient::request($method, '/monumental/building' . $queryURL, $body_array);
 	}
 
-	public static function elasticPost($queryURL="", $body_array=null) {
-		return ElasticClient::elasticMonumentalRequest('POST', $queryURL, $body_array);
+	public static function post($queryURL="", $body_array=null) {
+		return ElasticClient::monumentalRequest('POST', $queryURL, $body_array);
 	}
 
-	public static function elasticGet($queryURL="", $body_array=null) {
-		return ElasticClient::elasticMonumentalRequest('GET', $queryURL, $body_array);
+	public static function get($queryURL="", $body_array=null) {
+		return ElasticClient::monumentalRequest('GET', $queryURL, $body_array);
 	}
 
-	public static function elasticDelete($queryURL="", $body_array=null) {
-		return ElasticClient::elasticMonumentalRequest('DELETE', $queryURL, $body_array);
+	public static function delete($queryURL="", $body_array=null) {
+		return ElasticClient::monumentalRequest('DELETE', $queryURL, $body_array);
 	}
 }

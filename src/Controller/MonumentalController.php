@@ -23,9 +23,9 @@ class MonumentalController extends AbstractController {
 	*/
 	public function index() {
 		$message = "";
-		$message .= ES::elasticPost('1', ["title" => "first title"])['status'];
-		$message .= ES::elasticGet('1')['status'];
-		$message .= ES::elasticDelete('1')['status'];
+		$message .= ES::post('1', ["title" => "first title"])['status'];
+		$message .= ES::get('1')['status'];
+		$message .= ES::delete('1')['status'];
 
 		return $this->render('monumental/index.html.twig', [
 			'message' => $message,
@@ -37,27 +37,19 @@ class MonumentalController extends AbstractController {
 	*/
 	public function all_monuments() {
 		$message = "";
-		$result = ES::elasticGet('_search?pretty=true',
+		$result = ES::get('_search?pretty=true',
 		       	true ? null :(
 				['query' => ['match_all' => [''=>'']],
 				'stored_fields' => []])
 			);
-//		$message .= $result['status'];
-//		$message .= "\n";
-//		$message .= json_encode($result['body']);
+$message .= $result['status'];
+$message .= "\n";
+$message .= json_encode($result['body']);
 		$body = $result['body'];
-		$hits = $body['hits']['total'];
-		$hits = $body['hits']['hits'];
-		foreach ($hits as $hits_key => $hit) {
-			if (!isset($hit['_source']['images'])) {
-				$hit['_source']['images'] = ""; // empty image
-				$hits[$hits_key] = $hit; // push back into array that's used later by twig
-			}
-		}
 
 		return $this->render('monumental/all.html.twig', [
 			'message' => $message,
-			'hits' => $hits,
+			'hits' => $result['body']['hits']['hits'],
 			]);
 	}
 
@@ -69,6 +61,7 @@ class MonumentalController extends AbstractController {
 
 		$form = $this->createFormBuilder($monument)
 			->add('name', TextType::class, array('attr' => array('class' => 'form-control'), 'label' => "Monument Name"))
+			->add('description', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
 			->add('location', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
 			->add('date', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
 			->add('height', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
@@ -97,8 +90,18 @@ class MonumentalController extends AbstractController {
 			}
 			$message = "b64file is \"$b64_images\"\n";
 
-			$message = ES::elasticPost('2', [
+			$message = ES::post('', [
 				'name' => $monument->getName(),
+				'description' => $monument->getDescription(),
+				'location' => $monument->getLocation(),
+				'date' => $monument->getDate(),
+				'height' => $monument->getHeight(),
+				'unesco_status' => $monument->getUnescoStatus(),
+				'builder' => $monument->getBuilder(),
+				'purpose' => $monument->getPurpose(),
+				'condition' => $monument->getCondition(),
+				'major_event' => $monument->getMajorEvent(),
+				'tags' => $monument->getTags(),
 				'images' => $b64_images,
 			])['status'];
 
@@ -111,5 +114,14 @@ class MonumentalController extends AbstractController {
 		return $this->render("monumental/new.html.twig", [
 			'form' => $form->createView(),
 		]);
+	}
+
+	/**
+	* @Route("/delete_monument/{id}", name="delete_monument")
+	*/
+	public function delete_monument(Request $request, $id) {
+		ES::delete($id);
+
+		return $this->redirect($request->headers->get('referer'));
 	}
 }

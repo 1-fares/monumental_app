@@ -2,10 +2,10 @@
 <div class="row">
     {% for hit in hits %}
 <div class="col-3 card m-3" style="width: 18rem;">
-  <img class="card-img-top" src="data:image/png;base64,{{ hit._source.images }}" alt="Card image cap">
+  <img class="card-img-top" src="data:image/png;base64,{% if hit._source.images is defined%}{{ hit._source.images }}{%endif%}" alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">{{ hit._source.name }}</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <p class="card-text">{% if hit._source.description is defined%}{{ hit._source.description }}{%endif%}</p>
   </div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item">Cras justo odio</li>
@@ -13,8 +13,8 @@
     <li class="list-group-item">Vestibulum at eros</li>
   </ul>
   <div class="card-body">
-    <a href="#" class="card-link">Full info</a>
-    <a href="#" class="card-link">Another link</a>
+    <a href="/monument/{{ hit._id }}" class="btn btn-primary m-1 btn-block">View Monument</a>
+    <button class="btn btn-danger m-1" onClick="this.disabled=true; this.innerHTML='Deleting...'; window.location.href='/delete_monument/{{ hit._id }}'; return true;">Delete</button>
   </div>
 </div> {#/card#}
     {% else %}
