@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ monument.name }}{% endblock %}
+{% block body %}
+
+{# <div><pre> {{ message }} </pre></div> #}
+
+<div class="container">
+<div class="row">
+<div class="col-xl-12 card m-3" style="width: 18rem;">
+  <img class="card-img-top" src="{% if monument.image is defined%}data:image/{% if 'iVBORw0KGgo' in monument.image %}png{%else%}jpeg{%endif%};base64,{{ monument.image }}{%endif%}" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{ monument.name }}</h5>
+    <p class="card-text">{% if monument.description is defined%}{{ monument.description }}{%endif%}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Cras justo odio</li>
+    <li class="list-group-item">Dapibus ac facilisis in</li>
+    <li class="list-group-item">Vestibulum at eros</li>
+  </ul>
+  <div class="card-body">
+    <button class="btn btn-danger m-1" onClick="this.disabled=true; this.innerHTML='Deleting...'; window.location.href='/delete/{{ id }}'; return true;">Delete</button>
+  </div>
+</div> {#/card#}
+</div> {#/row#}
+</div> {#/container#}
+
+{% endblock %}

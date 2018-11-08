@@ -23,9 +23,9 @@ class MonumentalController extends AbstractController {
 	*/
 	public function index() {
 		$message = "";
-		$message .= ES::post('1', ["title" => "first title"])['status'];
-		$message .= ES::get('1')['status'];
-		$message .= ES::delete('1')['status'];
+//		$message .= ES::post('1', ["title" => "first title"])['status'];
+//		$message .= ES::get('1')['status'];
+//		$message .= ES::delete('1')['status'];
 
 		return $this->render('monumental/index.html.twig', [
 			'message' => $message,
@@ -42,9 +42,9 @@ class MonumentalController extends AbstractController {
 				['query' => ['match_all' => [''=>'']],
 				'stored_fields' => []])
 			);
-$message .= $result['status'];
-$message .= "\n";
-$message .= json_encode($result['body']);
+//$message .= $result['status'];
+//$message .= "\n";
+//$message .= json_encode($result['body']);
 		$body = $result['body'];
 
 		return $this->render('monumental/all.html.twig', [
@@ -120,9 +120,14 @@ $message .= json_encode($result['body']);
 	* @Route("/view/{id}", name="view")
 	*/
 	public function view(Request $request, $id) {
-		$response = ES::get($id);
+		$message = '';
+		$result = ES::get($id);
 
-		return $this->redirect($request->headers->get('referer'));
+		return $this->render('monumental/view.html.twig', [
+			'message' => $message,
+			'monument' => $result['body']['_source'],
+			'id' => $result['body']['_id'],
+			]);
 	}
 
 	/**

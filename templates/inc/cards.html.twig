@@ -8,9 +8,8 @@
     <p class="card-text">{% if hit._source.description is defined%}{{ hit._source.description }}{%endif%}</p>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">Cras justo odio</li>
-    <li class="list-group-item">Dapibus ac facilisis in</li>
-    <li class="list-group-item">Vestibulum at eros</li>
+    {% if hit._source.location %}<li class="list-group-item">{{ hit._source.location }}</li>{%endif%}
+    {% if hit._source.date %}<li class="list-group-item">{{ hit._source.date }}</li>{%endif%}
   </ul>
   <div class="card-body">
     <a href="/view/{{ hit._id }}" class="btn btn-primary m-1 btn-block">View Monument</a>
