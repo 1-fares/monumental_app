@@ -2,7 +2,7 @@
 <div class="row">
     {% for hit in hits %}
 <div class="col-3 card m-3" style="width: 18rem;">
-  <img class="card-img-top" src="data:image/png;base64,{% if hit._source.images is defined%}{{ hit._source.images }}{%endif%}" alt="Card image cap">
+  <img class="card-img-top" src="{% if hit._source.image is defined%}data:image/{% if 'iVBORw0KGgo' in hit._source.image %}png{%else%}jpeg{%endif%};base64,{{ hit._source.image }}{%endif%}" alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">{{ hit._source.name }}</h5>
     <p class="card-text">{% if hit._source.description is defined%}{{ hit._source.description }}{%endif%}</p>

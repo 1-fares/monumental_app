@@ -71,7 +71,7 @@ $message .= json_encode($result['body']);
 			->add('condition', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
 			->add('major_event', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
 			->add('tags', TextType::class, array('attr' => array('class' => 'form-control'), 'required' => false))
-			->add('images', FileType::class, array('required' => false, 'label' => "Image"))
+			->add('image', FileType::class, array('required' => false, 'label' => "Image"))
 
 			->add('save', SubmitType::class, array('label' => 'Create', 'attr' => array('class' => 'btn btn-primary mt-3 btn-block')))
 			->getForm();
@@ -81,14 +81,14 @@ $message .= json_encode($result['body']);
 		if ($form->isSubmitted() && $form->isValid()) {
 			$monument = $form->getData();
 
-			$b64_images = "";
-			$filename = $form['images']->getData();
+			$b64_image = "";
+			$filename = $form['image']->getData();
 
 			if ($filename) {
 				$file_contents = file_get_contents($filename);
-				$b64_images = $file_contents === false ? "" : base64_encode($file_contents);
+				$b64_image = $file_contents === false ? "" : base64_encode($file_contents);
 			}
-			$message = "b64file is \"$b64_images\"\n";
+			$message = "b64file is \"$b64_image\"\n";
 
 			$message = ES::post('', [
 				'name' => $monument->getName(),
@@ -102,18 +102,27 @@ $message .= json_encode($result['body']);
 				'condition' => $monument->getCondition(),
 				'major_event' => $monument->getMajorEvent(),
 				'tags' => $monument->getTags(),
-				'images' => $b64_images,
+				'image' => $b64_image,
 			])['status'];
 
-			return $this->render('monumental/index.html.twig', [
-				'controller_name' => 'MonumentalController',
+			return $this->redirect('/');
+/*			return $this->render('monumental/index.html.twig', [
 				'message' => $message,
-				]);
+			]);*/
 		}
 
 		return $this->render("monumental/new.html.twig", [
 			'form' => $form->createView(),
 		]);
+	}
+
+	/**
+	* @Route("/view/{id}", name="view")
+	*/
+	public function view(Request $request, $id) {
+		$response = ES::get($id);
+
+		return $this->redirect($request->headers->get('referer'));
 	}
 
 	/**

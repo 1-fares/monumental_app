@@ -74,7 +74,7 @@ class Monument
     /**
      * @ORM\Column(type="blob", nullable=true)
      */
-    private $images;
+    private $image;
 
     public function getId(): ?int
     {
@@ -213,14 +213,14 @@ class Monument
         return $this;
     }
 
-    public function getImages(): ?string
+    public function getImage(): ?string
     {
-        return $this->images;
+        return $this->image;
     }
 
-    public function setImages($images): self
+    public function setImage($image): self
     {
-        $this->images = $images;
+        $this->image = $image;
 
         return $this;
     }
