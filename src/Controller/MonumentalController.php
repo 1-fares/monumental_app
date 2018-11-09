@@ -37,14 +37,29 @@ class MonumentalController extends AbstractController {
 	*/
 	public function all() {
 		$message = "";
-		$result = ES::get('_search?pretty=true',
-		       	true ? null :(
-				['query' => ['match_all' => [''=>'']],
-				'stored_fields' => []])
-			);
+		$result = ES::get('_search');
 //$message .= $result['status'];
 //$message .= "\n";
 //$message .= json_encode($result['body']);
+		$body = $result['body'];
+
+		return $this->render('monumental/all.html.twig', [
+			'message' => $message,
+			'hits' => $result['body']['hits']['hits'],
+			]);
+	}
+
+	/**
+	* @Route("/search", name="search")
+	*/
+	public function search(Request $request) {
+		$message = "";
+		//$message = var_export($request->request->all(), true);
+		$message = 'Searched for: ' . $request->request->get('search_term');
+		$search_term = $request->request->get('search_term');
+		$result = ES::get('_search',
+			['query' => ['multi_match' => ['query' => $search_term]]]
+		);
 		$body = $result['body'];
 
 		return $this->render('monumental/all.html.twig', [
