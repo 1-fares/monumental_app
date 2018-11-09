@@ -105,7 +105,7 @@ class MonumentalController extends AbstractController {
 			}
 			$message = "b64file is \"$b64_image\"\n";
 
-			$message = ES::post('', [
+			$result = ES::post('', [
 				'name' => $monument->getName(),
 				'description' => $monument->getDescription(),
 				'location' => $monument->getLocation(),
@@ -118,9 +118,10 @@ class MonumentalController extends AbstractController {
 				'major_event' => $monument->getMajorEvent(),
 				'tags' => $monument->getTags(),
 				'image' => $b64_image,
-			])['status'];
+			]);
+			$message = $result['status'];
 
-			return $this->redirect('/');
+			return $this->redirect('/view/' . $result['body']['_id']);
 /*			return $this->render('monumental/index.html.twig', [
 				'message' => $message,
 			]);*/
