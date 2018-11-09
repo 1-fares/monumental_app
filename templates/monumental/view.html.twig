@@ -10,15 +10,26 @@
 <div class="col-xl-12 card m-3" style="width: 18rem;">
   <img class="card-img-top" src="{% if monument.image is defined%}data:image/{% if 'iVBORw0KGgo' in monument.image %}png{%else%}jpeg{%endif%};base64,{{ monument.image }}{%endif%}" alt="Card image cap">
   <div class="card-body">
-    <h5 class="card-title">{{ monument.name }}</h5>
+    <h2 class="card-title">{{ monument.name }}</h2>
     <p class="card-text">{% if monument.description is defined%}{{ monument.description }}{%endif%}</p>
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item">Cras justo odio</li>
-    <li class="list-group-item">Dapibus ac facilisis in</li>
-    <li class="list-group-item">Vestibulum at eros</li>
+    <li class="list-group-item">
+    <dl class="row">
+        {% if monument.location is defined and monument.location is not empty %}<dt class="col-sm-3">Location</dt><dd class="col-sm-9">{{monument.location}}</dd>{%endif%}
+        {% if monument.date is defined and monument.date is not empty %}<dt class="col-sm-3">Date</dt><dd class="col-sm-9">{{monument.date}}</dd>{%endif%}
+        {% if monument.height is defined and monument.height is not empty %}<dt class="col-sm-3">Height</dt><dd class="col-sm-9">{{monument.height}}</dd>{%endif%}
+        {% if monument.unesco_status is defined and monument.unesco_status is not empty %}<dt class="col-sm-3">Unesco Status</dt><dd class="col-sm-9">{{monument.unesco_status}}</dd>{%endif%}
+        {% if monument.builder is defined and monument.builder is not empty %}<dt class="col-sm-3">Builder</dt><dd class="col-sm-9">{{monument.builder}}</dd>{%endif%}
+        {% if monument.purpose is defined and monument.purpose is not empty %}<dt class="col-sm-3">Purpose</dt><dd class="col-sm-9">{{monument.purpose}}</dd>{%endif%}
+        {% if monument.condition is defined and monument.condition is not empty %}<dt class="col-sm-3">Condition</dt><dd class="col-sm-9">{{monument.condition}}</dd>{%endif%}
+        {% if monument.major_event is defined and monument.major_event is not empty %}<dt class="col-sm-3">Major Event</dt><dd class="col-sm-9">{{monument.major_event}}</dd>{%endif%}
+        {% if monument.tags is defined and monument.tags is not empty %}<dt class="col-sm-3">Tags</dt><dd class="col-sm-9">{{monument.tags}}</dd>{%endif%}
+    </dl>
+    </li>
   </ul>
   <div class="card-body">
+    <a href="/edit/{{ id }}" class="btn btn-secondary m-1 btn-block">Edit Monument</a>
     <button class="btn btn-danger m-1" onClick="this.disabled=true; this.innerHTML='Deleting...'; window.location.href='/delete/{{ id }}'; return true;">Delete</button>
   </div>
 </div> {#/card#}

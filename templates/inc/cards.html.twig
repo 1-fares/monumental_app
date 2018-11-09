@@ -13,6 +13,7 @@
   </ul>
   <div class="card-body">
     <a href="/view/{{ hit._id }}" class="btn btn-primary m-1 btn-block">View Monument</a>
+    <a href="/edit/{{ hit._id }}" class="btn btn-secondary m-1 btn-block">Edit Monument</a>
     <button class="btn btn-danger m-1" onClick="this.disabled=true; this.innerHTML='Deleting...'; window.location.href='/delete/{{ hit._id }}'; return true;">Delete</button>
   </div>
 </div> {#/card#}

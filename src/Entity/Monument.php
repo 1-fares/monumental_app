@@ -81,6 +81,13 @@ class Monument
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+	$this->id = $id;
+
+	return $this;
+    }
+
     public function getName(): ?string
     {
         return $this->name;
@@ -223,5 +230,24 @@ class Monument
         $this->image = $image;
 
         return $this;
+    }
+
+    public function setValuesFromArray($arr): self
+    {
+//	$this->id = $arr['id'];
+	$this->name = $arr['name'];
+	$this->description = $arr['description'];
+	$this->location = $arr['location'];
+	$this->date = $arr['date'];
+	$this->height = $arr['height'];
+	$this->unesco_status = $arr['unesco_status'];
+	$this->builder = $arr['builder'];
+	$this->purpose = $arr['purpose'];
+	$this->condition = $arr['condition'];
+	$this->major_event = $arr['major_event'];
+	$this->tags = $arr['tags'];
+//	$this->image = $arr['image'];
+	
+	return $this;
     }
 }

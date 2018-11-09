@@ -43,6 +43,10 @@ class ElasticClient {
 		return ElasticClient::monumentalRequest('POST', $queryURL, $body_array);
 	}
 
+	public static function update($queryURL="", $body_array=null) {
+		return ElasticClient::monumentalRequest('POST', $queryURL . "/_update", ['doc' => $body_array]);
+	}
+
 	public static function get($queryURL="", $body_array=null) {
 		return ElasticClient::monumentalRequest('GET', $queryURL, $body_array);
 	}

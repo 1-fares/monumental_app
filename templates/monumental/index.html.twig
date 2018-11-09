@@ -17,7 +17,12 @@
           <div class="col-md-4">
             <h2>Search for Monuments</h2>
             <p>Here you can search for monuments stored in this instance of elasticsearch.</p>
-            <p><a class="btn btn-secondary btn-block" href="/search" role="button">Search &raquo;</a></p>
+               <form class="form-inline mt-2 mt-md-0" action="/search">
+                        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+
+            {#<p><a class="btn btn-secondary btn-block" href="/search" role="button">Search &raquo;</a></p>#}
           </div>
           <div class="col-md-4">
             <h2>Add Monuments</h2>
