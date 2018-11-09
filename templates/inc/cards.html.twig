@@ -1,8 +1,12 @@
 <div class="container">
 <div class="row">
     {% for hit in hits %}
-<div class="col-3 card m-3" style="width: 18rem;">
-  <img class="card-img-top" src="{% if hit._source.image is defined%}data:image/{% if 'iVBORw0KGgo' in hit._source.image %}png{%else%}jpeg{%endif%};base64,{{ hit._source.image }}{%endif%}" alt="Card image cap">
+    {% if not loop.first and not loop.index0 % 3 %}
+</div>
+<div class="row">
+    {%endif%}
+<div class="col-lg card m-3" style="width: 18rem;">
+  <a href="/view/{{ hit._id }}"><img class="card-img-top" src="{% if hit._source.image is defined%}data:image/{% if 'iVBORw0KGgo' in hit._source.image %}png{%else%}jpeg{%endif%};base64,{{ hit._source.image }}{%endif%}" alt="Card image cap"></a>
   <div class="card-body">
     <h5 class="card-title">{{ hit._source.name }}</h5>
     <p class="card-text">{% if hit._source.description is defined%}{{ hit._source.description }}{%endif%}</p>
@@ -12,7 +16,7 @@
     {% if hit._source.date %}<li class="list-group-item">{{ hit._source.date }}</li>{%endif%}
   </ul>
   <div class="card-body">
-    <a href="/view/{{ hit._id }}" class="btn btn-primary m-1 btn-block">View Monument</a>
+    <a href="/view/{{ hit._id }}" class="btn btn-primary m-1 btn-block">View Details</a>
     <a href="/edit/{{ hit._id }}" class="btn btn-secondary m-1 btn-block">Edit Monument</a>
     <button class="btn btn-danger m-1" onClick="this.disabled=true; this.innerHTML='Deleting...'; window.location.href='/delete/{{ hit._id }}'; return true;">Delete</button>
   </div>

@@ -223,6 +223,10 @@ class MonumentalController extends AbstractController {
 	public function delete(Request $request, $id) {
 		ES::delete($id);
 
-		return $this->redirect($request->headers->get('referer'));
+		$redirect_to = $request->headers->get('referer');
+
+		if (strpos($redirect_to, 'view/') !== false) $redirect_to = '/'; // don't send back to view what we just deleted
+
+		return $this->redirect($redirect_to);
 	}
 }
